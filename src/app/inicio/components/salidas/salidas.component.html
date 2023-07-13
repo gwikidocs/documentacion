@@ -1,0 +1,47 @@
+<div class="m-5">
+  <div class="d-flex justify-content-end mb-3">
+    <button mat-raised-button color="primary" (click)="agregarFila()" >Añadir</button>
+  </div>
+  <div class="example-container mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+      <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+        
+        <th mat-header-cell *matHeaderCellDef>
+          {{ col.label }}
+        </th>
+        
+        <td mat-cell *matCellDef="let element">
+          
+          <div [ngSwitch]="col.type" *ngIf="!element.esEditar">
+            <div *ngSwitchCase="'esEditar'">
+              <button mat-raised-button class="me-2" (click)="element.esEditar = !element.esEditar">Editar</button>
+              <button mat-raised-button color="warn" (click)="eliminarFila(element.id)"> Eliminar </button>
+            </div>
+            <span *ngSwitchDefault> {{ element[col.key] }} </span>
+          </div>
+
+          <div [ngSwitch]="col.type" *ngIf="element.esEditar">
+
+            <div *ngSwitchCase="'esEditar'">
+              <button mat-button color="primary" (click)="element.esEditar = !element.esEditar">Aceptar</button>
+            </div>
+
+            <mat-form-field *ngSwitchCase="'date'" appearance="fill">
+              <mat-label>Selecciona una fecha</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="element[col.key]" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field *ngSwitchDefault>
+              <input [type]="col.type" matInput [(ngModel)]="element[col.key]" />
+            </mat-form-field>
+          
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+</div>
